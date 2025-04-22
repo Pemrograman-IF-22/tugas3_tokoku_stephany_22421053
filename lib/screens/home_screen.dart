@@ -1,7 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:tokoku/models/produk_model.dart' show Product;
 
-class HomeScreen extends StatelessWidget {
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Product> products = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchProduct();
+  }
+
+  Future<void> fetchProduct() async {
+    final response = await http.get(
+      Uri.parse('https://fakestoreapi.com/products')
+    );
+
+    debugPrint('Response: ${response.body}');
+
+    if (response.statusCode == 200) {
+
+    } else {
+      throw Exception(('gagal mengambil data produk'));
+
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                     vertical: 4
                     ),
                     child: Text(
-                      'kategori ${index + 1}',
+                      Product.kategori,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.amberAccent
@@ -50,7 +84,8 @@ class HomeScreen extends StatelessWidget {
                       'produk ${index + 1}',
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
+                        overflow:TextOverflow.ellipsis
                       ),
                     ),
                   ),
@@ -58,8 +93,7 @@ class HomeScreen extends StatelessWidget {
                     padding:EdgeInsets.symmetric(horizontal: 8,
                     vertical: 4
                     ),
-                    child: Text(
-                      '\$20.0',
+                    child: Text('{product.price}}',
                       style: TextStyle(
                         color: Colors.amberAccent
                       ),
